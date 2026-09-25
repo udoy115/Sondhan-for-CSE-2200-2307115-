@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sondhan.controller.HomeController"
+            styleClass="root-pane" prefWidth="1000.0" prefHeight="680.0">
+
+    <!-- ── Header ──────────────────────────────────────────────────────────── -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="12.0">
+            <padding><Insets top="14" right="20" bottom="14" left="20"/></padding>
+            <VBox>
+                <Label text="&#x09B8;&#x09A8;&#x09CD;&#x09A7;&#x09BE;&#x09A8;" styleClass="header-logo"/>
+                <Label text="AI Fact Checker" styleClass="header-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="apiKeyStatusLabel" text="No API Key" styleClass="status-badge"/>
+            <Button text="&#x1F511; API Key" styleClass="btn-secondary" onAction="#handleApiKey"/>
+            <Button text="&#x1F4DC; History"  styleClass="btn-secondary" onAction="#handleHistory"/>
+            <Label fx:id="userNameLabel" styleClass="user-label"/>
+            <Button text="Logout" styleClass="btn-ghost" onAction="#handleLogout"/>
+        </HBox>
+    </top>
+
+    <!-- ── Body ────────────────────────────────────────────────────────────── -->
+    <center>
+        <HBox spacing="16.0">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <!-- LEFT PANEL: Input -->
+            <VBox styleClass="panel" spacing="14.0" prefWidth="420.0" minWidth="360.0">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <Label text="Verify a Claim" styleClass="panel-title"/>
+                <Label text="Upload an image or type a claim below" styleClass="text-muted"/>
+
+                <TabPane fx:id="inputTabPane" styleClass="custom-tabpane">
+
+                    <!-- Image Tab -->
+                    <Tab fx:id="imageTab" text="&#x1F5BC; Image" closable="false">
+                        <VBox spacing="12.0">
+                            <padding><Insets top="12"/></padding>
+
+                            <!-- Drop zone -->
+                            <StackPane fx:id="dropZone" styleClass="drop-zone"
+                                       prefHeight="160.0" onMouseClicked="#handleBrowse">
+                                <VBox alignment="CENTER" spacing="8.0">
+                                    <Label text="&#x1F4E4;" style="-fx-font-size:36px;"/>
+                                    <Label fx:id="dropLabel" text="Drag &amp; Drop image here"
+                                           styleClass="drop-label"/>
+                                    <Label text="or click to browse" styleClass="text-muted"/>
+                                </VBox>
+                                <ImageView fx:id="previewImage" visible="false"
+                                           fitWidth="380.0" fitHeight="155.0"
+                                           preserveRatio="true"/>
+                            </StackPane>
+
+                            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                <Button text="Browse..." styleClass="btn-secondary"
+                                        onAction="#handleBrowse"/>
+                                <Button fx:id="clearImageBtn" text="&#x2715; Clear"
+                                        styleClass="btn-ghost" onAction="#handleClearImage"/>
+                                <Label fx:id="fileNameLabel" text="No file selected"
+                                       styleClass="text-muted" HBox.hgrow="ALWAYS"/>
+                            </HBox>
+                        </VBox>
+                    </Tab>
+
+                    <!-- Text Tab -->
+                    <Tab text="&#x1F4AC; Text Claim" closable="false">
+                        <VBox spacing="10.0">
+                            <padding><Insets top="12"/></padding>
+                            <Label text="Paste or type a claim to verify:" styleClass="field-label"/>
+                            <TextArea fx:id="textInputArea"
+                                      promptText="e.g. Dhaka has been the capital of Bangladesh since 1971..."
+                                      prefHeight="190.0" wrapText="true" styleClass="claim-textarea"/>
+                        </VBox>
+                    </Tab>
+                </TabPane>
+
+                <!-- Loading row -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0" minHeight="28.0">
+                    <ProgressIndicator fx:id="loadingSpinner" prefHeight="24.0" prefWidth="24.0"/>
+                    <Label fx:id="loadingLabel" text="Analysing..." styleClass="text-muted"/>
+                </HBox>
+
+                <Button fx:id="checkBtn" text="&#x1F50D;  Check Fact"
+                        styleClass="btn-primary" maxWidth="Infinity"
+                        onAction="#handleCheck"/>
+            </VBox>
+
+            <!-- RIGHT PANEL: Results -->
+            <ScrollPane HBox.hgrow="ALWAYS" fitToWidth="true" styleClass="result-scroll">
+                <VBox spacing="0.0">
+
+                    <!-- Empty State -->
+                    <VBox fx:id="emptyState" alignment="CENTER" spacing="14.0" prefHeight="480.0">
+                        <Label text="&#x1F50E;" style="-fx-font-size:64px;"/>
+                        <Label text="Results will appear here" styleClass="panel-title"/>
+                        <Label text="Upload an image or enter a claim, then click Check Fact."
+                               styleClass="text-muted" wrapText="true" textAlignment="CENTER" maxWidth="300.0"/>
+                    </VBox>
+
+                    <!-- Result Panel -->
+                    <VBox fx:id="resultPanel" styleClass="panel" spacing="16.0">
+                        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <Label text="Fact-Check Result" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="preloadedBadge" text="&#x26A1; Preloaded"
+                                   styleClass="badge-preloaded"/>
+                        </HBox>
+
+                        <!-- Claim -->
+                        <VBox styleClass="claim-box" spacing="6.0">
+                            <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                            <Label text="Claim" styleClass="section-label"/>
+                            <Label fx:id="claimLabel" styleClass="claim-text" wrapText="true"/>
+                        </VBox>
+
+                        <!-- Verdict + Confidence -->
+                        <HBox spacing="16.0" alignment="CENTER_LEFT">
+                            <Label fx:id="verdictLabel" text="UNVERIFIED" styleClass="verdict-unverified"
+                                   style="-fx-font-size:18px;-fx-font-weight:bold;-fx-padding:6 16;-fx-background-radius:20;"/>
+                            <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                    <Label text="Confidence" styleClass="section-label"/>
+                                    <Label fx:id="confidencePctLabel" text="0%"
+                                           styleClass="confidence-pct"/>
+                                </HBox>
+                                <ProgressBar fx:id="confidenceBar" progress="0.0"
+                                             maxWidth="Infinity" styleClass="confidence-bar"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Explanation -->
+                        <VBox spacing="6.0">
+                            <Label text="Explanation" styleClass="section-label"/>
+                            <TextArea fx:id="explanationArea" prefHeight="120.0"
+                                      editable="false" wrapText="true" styleClass="explanation-area"/>
+                        </VBox>
+
+                        <!-- Sources -->
+                        <VBox spacing="6.0">
+                            <Label text="Sources" styleClass="section-label"/>
+                            <VBox fx:id="sourcesBox" spacing="4.0"/>
+                        </VBox>
+
+                        <!-- Summary -->
+                        <VBox fx:id="summaryBox" spacing="6.0">
+                            <Label text="10-Point Summary" styleClass="section-label"/>
+                            <Label fx:id="summaryLabel" wrapText="true" styleClass="summary-text"/>
+                        </VBox>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </HBox>
+    </center>
+</BorderPane>
