@@ -112,8 +112,6 @@
                             <Button text="&#x2190; Back" styleClass="btn-ghost" onAction="#handleClearResult"/>
                             <Label text="Fact-Check Result" styleClass="panel-title"/>
                             <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="preloadedBadge" text="&#x26A1; Preloaded"
-                                   styleClass="badge-preloaded"/>
                         </HBox>
 
                         <!-- Claim -->

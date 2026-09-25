@@ -9,7 +9,6 @@ public class FactCheckResult {
     private String claim, verdict, explanation;
     private int confidence;
     private List<Source> sources;
-    private boolean preloaded;
     private List<String> summary;
 
     public String getClaim()              { return claim; }
@@ -22,8 +21,6 @@ public class FactCheckResult {
     public void   setConfidence(int v)    { confidence=v; }
     public List<Source> getSources()      { return sources; }
     public void setSources(List<Source> v){ sources=v; }
-    public boolean isPreloaded()          { return preloaded; }
-    public void setPreloaded(boolean v)   { preloaded=v; }
     public List<String> getSummary()      { return summary; }
     public void setSummary(List<String> v){ summary=v; }
 }

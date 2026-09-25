@@ -36,7 +36,7 @@ public class HomeController {
     @FXML private ProgressIndicator loadingSpinner;
     @FXML private Label  loadingLabel;
     @FXML private VBox   emptyState, resultPanel;
-    @FXML private Label  claimLabel, verdictLabel, confidencePctLabel, preloadedBadge;
+    @FXML private Label  claimLabel, verdictLabel, confidencePctLabel;
     @FXML private ProgressBar confidenceBar;
     @FXML private TextArea explanationArea;
     @FXML private VBox   sourcesBox, summaryBox;
@@ -53,19 +53,8 @@ public class HomeController {
         loadingSpinner.setVisible(false);
         loadingLabel.setVisible(false);
         clearImageBtn.setVisible(false);
-        preloadedBadge.setVisible(false); preloadedBadge.setManaged(false);
         summaryBox.setVisible(false);     summaryBox.setManaged(false);
         setupDragAndDrop();
-
-        // Topic 2: Init preloaded DB on background ExecutorService thread
-        Task<Void> preloadTask = new Task<>() {
-            @Override protected Void call() {
-                PreloadedDatabase.getInstance().initialize(
-                    System.getProperty("user.dir") + File.separator + "preloaded");
-                return null;
-            }
-        };
-        FactCheckerService.getExecutor().submit(preloadTask);
     }
 
     private void setupDragAndDrop() {
@@ -141,9 +130,6 @@ public class HomeController {
         File img = selectedImageFile;
         Task<FactCheckResult> task = new Task<>() {
             @Override protected FactCheckResult call() throws Exception {
-                updateMessage("Checking preloaded database...");
-                FactCheckResult pre = PreloadedDatabase.getInstance().match(img);
-                if (pre != null) { Thread.sleep(1500); return pre; }
                 updateMessage("Calling Claude AI (image analysis)...");
                 if (!SessionManager.hasApiKey())
                     throw new RuntimeException("No API key set. Click the API Key button.");
@@ -157,10 +143,6 @@ public class HomeController {
     private void runTextCheck(String claim) {
         Task<FactCheckResult> task = new Task<>() {
             @Override protected FactCheckResult call() throws Exception {
-                updateMessage("Checking preloaded database...");
-                FactCheckResult pre = PreloadedDatabase.getInstance().matchText(claim);
-                if (pre != null) { Thread.sleep(1500); return pre; }
-
                 updateMessage("Calling Claude AI...");
                 if (!SessionManager.hasApiKey())
                     throw new RuntimeException("No API key set. Click the API Key button.");
@@ -200,7 +182,6 @@ public class HomeController {
         confidenceBar.setProgress(r.getConfidence() / 100.0);
         confidencePctLabel.setText(r.getConfidence() + "%");
         explanationArea.setText(r.getExplanation());
-        preloadedBadge.setVisible(r.isPreloaded()); preloadedBadge.setManaged(r.isPreloaded());
 
         sourcesBox.getChildren().clear();
         if (r.getSources() != null) {
@@ -215,12 +196,7 @@ public class HomeController {
             }
         }
 
-        if (r.isPreloaded() && r.getSummary() != null) {
-            summaryLabel.setText(String.join("\n", r.getSummary()));
-            summaryBox.setVisible(true); summaryBox.setManaged(true);
-        } else {
-            genSummary(r);
-        }
+        genSummary(r);
 
         // Topic 3: Save to SQLite on background thread
         if (!SessionManager.isGuest()) saveToDb(r, type, orig);
@@ -259,7 +235,7 @@ public class HomeController {
             @Override protected Void call() throws Exception {
                 DatabaseService.getInstance().saveSearch(uid, type, orig,
                     r.getClaim(), r.getVerdict(), r.getConfidence(),
-                    r.getExplanation(), srcJson, r.isPreloaded());
+                    r.getExplanation(), srcJson);
                 return null;
             }
         };
