@@ -34,7 +34,7 @@ public class DatabaseService {
     private void createTables() throws SQLException {
         try (Statement s = connection.createStatement()) {
             s.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)");
-            s.execute("CREATE TABLE IF NOT EXISTS searches (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, input_type TEXT, original_input TEXT, claim TEXT, verdict TEXT, confidence INTEGER, explanation TEXT, sources_json TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id))");
+            s.execute("CREATE TABLE IF NOT EXISTS searches (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, input_type TEXT, original_input TEXT, claim TEXT, verdict TEXT, confidence INTEGER, explanation TEXT, sources_json TEXT, preloaded INTEGER DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id))");
         }
     }
 
@@ -58,13 +58,13 @@ public class DatabaseService {
     }
 
     public int saveSearch(int uid, String type, String orig, String claim, String verdict,
-                          int conf, String expl, String srcJson) throws SQLException {
+                          int conf, String expl, String srcJson, boolean pre) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-            "INSERT INTO searches (user_id,input_type,original_input,claim,verdict,confidence,explanation,sources_json) VALUES (?,?,?,?,?,?,?,?)",
+            "INSERT INTO searches (user_id,input_type,original_input,claim,verdict,confidence,explanation,sources_json,preloaded) VALUES (?,?,?,?,?,?,?,?,?)",
             Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1,uid); ps.setString(2,type); ps.setString(3,orig);
             ps.setString(4,claim); ps.setString(5,verdict); ps.setInt(6,conf);
-            ps.setString(7,expl); ps.setString(8,srcJson);
+            ps.setString(7,expl); ps.setString(8,srcJson); ps.setInt(9,pre?1:0);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) return rs.getInt(1);
@@ -83,7 +83,7 @@ public class DatabaseService {
                 h.setInputType(rs.getString("input_type")); h.setOriginalInput(rs.getString("original_input"));
                 h.setClaim(rs.getString("claim")); h.setVerdict(rs.getString("verdict"));
                 h.setConfidence(rs.getInt("confidence")); h.setExplanation(rs.getString("explanation"));
-                h.setSourcesJson(rs.getString("sources_json"));
+                h.setSourcesJson(rs.getString("sources_json")); h.setPreloaded(rs.getInt("preloaded")==1);
                 String ts = rs.getString("created_at");
                 if (ts != null) try { h.setCreatedAt(LocalDateTime.parse(ts.replace(" ","T"))); } catch (Exception ignored) {}
                 list.add(h);
