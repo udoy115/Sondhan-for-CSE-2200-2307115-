@@ -58,7 +58,20 @@ public class PreloadedDatabase {
                     new FactCheckResult.Source("TBS News","https://www.tbsnews.net/bangladesh/court/clemency-ex-igp-mamun-conditional-full-disclosure-july-august-atrocities-ict")),
             List.of("Ex-IGP Mamun was represented by Zayed bin Amzad from Shishir Manir's firm.",
                     "Shishir Manir himself did not appear in court for this case.",
-                    "Verdict: MISLEADING"))
+                    "Verdict: MISLEADING")),
+        new Entry("https://www.facebook.com/share/p/1cV3Vgo6oE/", true,
+            "Claim about Donald Trump calling CNN, MSNBC, and Politico reporters 'sick, treasonous, and demented' over UN General Assembly coverage.",
+            "TRUE", 100,
+            "The claim is fully corroborated by multiple major news outlets. President Trump did call CNN, MS NOW (formerly MSNBC), and Politico 'sick, treasonous, and demented' in a late-night Truth Social post after their reporters — including CNN's Kaitlan Collins — showed up to cover his appearance at the UN General Assembly on Tuesday, despite the White House having banned those outlets and pool coverage having been suspended. Trump specifically confronted Collins at the UN, telling her 'You shouldn't be here,' to which she responded that the United Nations had credentialed her. The broader context — the White House ban, the pool coverage suspension by TV networks, and the lawsuit filed by the outlets — is confirmed by The Hill, NBC News, Mediaite, and Yahoo News.",
+            List.of(
+                    new FactCheckResult.Source("Trump Blasts CNN, MS Now Over UN Coverage - Yahoo N...","https://www.yahoo.com/news/politics/articles/trump-blasts-cnn-ms-now-114803368.html"),
+                    new FactCheckResult.Source("Trump attacks CNN's Kaitlan Collins over UNGA cover...","https://thehill.com/homenews/media/6105932-donald-trump-kaitlan-collins-un-general-assembly-coverage-media-ban/"),
+                    new FactCheckResult.Source("Defending Trump media ban, DOJ cites national secur...","https://www.nbcnews.com/politics/politics-news/trump-media-ban-white-house-access-privilege-national-security-doj-rcna599347")
+            ),
+            List.of("President Trump criticized CNN, MSNBC, and Politico reporters over UN coverage.",
+                    "He called them 'sick, treasonous, and demented' in a Truth Social post.",
+                    "The White House had banned those outlets and suspended pool coverage.",
+                    "Verdict: TRUE"))
     );
 
     private PreloadedDatabase() {}
