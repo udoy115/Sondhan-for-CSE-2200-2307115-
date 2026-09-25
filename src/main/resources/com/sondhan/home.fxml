@@ -109,7 +109,9 @@
                         <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
 
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
-                            <Label text="Fact-Check Result" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
+                            <Button text="&#x2190; Back" styleClass="btn-ghost" onAction="#handleClearResult"/>
+                            <Label text="Fact-Check Result" styleClass="panel-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
                             <Label fx:id="preloadedBadge" text="&#x26A1; Preloaded"
                                    styleClass="badge-preloaded"/>
                         </HBox>

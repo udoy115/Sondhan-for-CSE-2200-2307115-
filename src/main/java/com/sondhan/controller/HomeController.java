@@ -157,6 +157,10 @@ public class HomeController {
     private void runTextCheck(String claim) {
         Task<FactCheckResult> task = new Task<>() {
             @Override protected FactCheckResult call() throws Exception {
+                updateMessage("Checking preloaded database...");
+                FactCheckResult pre = PreloadedDatabase.getInstance().matchText(claim);
+                if (pre != null) { Thread.sleep(1500); return pre; }
+
                 updateMessage("Calling Claude AI...");
                 if (!SessionManager.hasApiKey())
                     throw new RuntimeException("No API key set. Click the API Key button.");
@@ -276,6 +280,11 @@ public class HomeController {
     private void hideResult() {
         resultPanel.setVisible(false); resultPanel.setManaged(false);
         emptyState.setVisible(true);   emptyState.setManaged(true);
+    }
+    @FXML private void handleClearResult() {
+        hideResult();
+        textInputArea.clear();
+        handleClearImage();
     }
     private void alert(String t, String m) {
         Alert a = new Alert(Alert.AlertType.ERROR);

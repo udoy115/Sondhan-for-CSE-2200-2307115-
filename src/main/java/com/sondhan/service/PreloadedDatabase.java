@@ -11,6 +11,7 @@ import java.util.*;
 public class PreloadedDatabase {
     private static PreloadedDatabase instance;
     private final Map<String, FactCheckResult> hashToResult = new HashMap<>();
+    private final Map<String, FactCheckResult> textToResult = new HashMap<>();
     private boolean initialized = false;
 
     private static final List<Entry> ENTRIES = List.of(
@@ -70,16 +71,21 @@ public class PreloadedDatabase {
         if (initialized) return;
         System.out.println("[Preloaded] Initialising from: " + dir);
         for (Entry e : ENTRIES) {
-            File f = new File(dir, e.fileName);
-            if (!f.exists()) { System.out.println("[Preloaded] Missing: " + f.getAbsolutePath()); continue; }
-            try {
-                String hash = ImageHashUtil.hashFile(f);
-                hashToResult.put(hash, build(e));
-                System.out.println("[Preloaded] Registered: " + e.fileName + " -> " + hash.substring(0,12) + "...");
-            } catch (Exception ex) { System.out.println("[Preloaded] Hash failed: " + e.fileName); }
+            if (e.isText) {
+                textToResult.put(e.key.trim().toLowerCase(), build(e));
+                System.out.println("[Preloaded] Registered Text: " + e.key);
+            } else {
+                File f = new File(dir, e.key);
+                if (!f.exists()) { System.out.println("[Preloaded] Missing: " + f.getAbsolutePath()); continue; }
+                try {
+                    String hash = ImageHashUtil.hashFile(f);
+                    hashToResult.put(hash, build(e));
+                    System.out.println("[Preloaded] Registered: " + e.key + " -> " + hash.substring(0,12) + "...");
+                } catch (Exception ex) { System.out.println("[Preloaded] Hash failed: " + e.key); }
+            }
         }
         initialized = true;
-        System.out.println("[Preloaded] Ready. " + hashToResult.size() + " image(s) registered.");
+        System.out.println("[Preloaded] Ready. " + hashToResult.size() + " image(s), " + textToResult.size() + " text(s) registered.");
     }
 
     public FactCheckResult match(File uploaded) {
@@ -91,6 +97,13 @@ public class PreloadedDatabase {
         } catch (Exception ex) { ex.printStackTrace(); return null; }
     }
 
+    public FactCheckResult matchText(String text) {
+        if (text == null) return null;
+        FactCheckResult r = textToResult.get(text.trim().toLowerCase());
+        System.out.println("[Preloaded] Text " + (r != null ? "Match: " + r.getClaim() : "No match."));
+        return r;
+    }
+
     private FactCheckResult build(Entry e) {
         FactCheckResult r = new FactCheckResult();
         r.setClaim(e.claim); r.setVerdict(e.verdict); r.setConfidence(e.confidence);
@@ -100,12 +113,20 @@ public class PreloadedDatabase {
     }
 
     private static class Entry {
-        final String fileName, claim, verdict, explanation;
+        final String key, claim, verdict, explanation;
+        final boolean isText;
         final int confidence;
         final List<FactCheckResult.Source> sources;
         final List<String> summary;
-        Entry(String fn,String cl,String vd,int cf,String ex,List<FactCheckResult.Source> src,List<String> sum){
-            fileName=fn; claim=cl; verdict=vd; confidence=cf; explanation=ex; sources=src; summary=sum;
+        
+        // Constructor for images
+        Entry(String key, String cl, String vd, int cf, String ex, List<FactCheckResult.Source> src, List<String> sum) {
+            this(key, false, cl, vd, cf, ex, src, sum);
+        }
+
+        // Constructor for both
+        Entry(String key, boolean isText, String cl, String vd, int cf, String ex, List<FactCheckResult.Source> src, List<String> sum) {
+            this.key = key; this.isText = isText; claim = cl; verdict = vd; confidence = cf; explanation = ex; sources = src; summary = sum;
         }
     }
 }
