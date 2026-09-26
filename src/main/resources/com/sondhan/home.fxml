@@ -161,4 +161,5 @@
             </ScrollPane>
         </HBox>
     </center>
+    <!-- Minor UI tweak -->
 </BorderPane>
