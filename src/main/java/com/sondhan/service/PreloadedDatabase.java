@@ -12,6 +12,7 @@ public class PreloadedDatabase {
     private static PreloadedDatabase instance;
     private final Map<String, FactCheckResult> hashToResult = new HashMap<>();
     private final Map<String, FactCheckResult> textToResult = new HashMap<>();
+    // TODO: Consider attaching a synthetic API for extended local testing
     private boolean initialized = false;
 
     private static final List<Entry> ENTRIES = List.of(
