@@ -31,7 +31,7 @@ public class HomeController {
     @FXML private StackPane dropZone;
     @FXML private Label  dropLabel, fileNameLabel;
     @FXML private ImageView previewImage;
-    @FXML private Button clearImageBtn, checkBtn, backtrackBtn;
+    @FXML private Button clearImageBtn, checkBtn;
     @FXML private TextArea textInputArea;
     @FXML private ProgressIndicator loadingSpinner;
     @FXML private Label  loadingLabel;
@@ -53,7 +53,6 @@ public class HomeController {
         loadingSpinner.setVisible(false);
         loadingLabel.setVisible(false);
         clearImageBtn.setVisible(false);
-        backtrackBtn.setDisable(true);
         preloadedBadge.setVisible(false); preloadedBadge.setManaged(false);
         summaryBox.setVisible(false);     summaryBox.setManaged(false);
         setupDragAndDrop();
@@ -100,7 +99,6 @@ public class HomeController {
         } catch (Exception ignored) { previewImage.setVisible(false); }
         dropLabel.setVisible(false);
         clearImageBtn.setVisible(true);
-        backtrackBtn.setDisable(false);
     }
 
     @FXML private void handleClearImage() {
@@ -108,12 +106,9 @@ public class HomeController {
         fileNameLabel.setText("No file selected");
         previewImage.setImage(null); previewImage.setVisible(false);
         dropLabel.setVisible(true); clearImageBtn.setVisible(false);
-        backtrackBtn.setDisable(true);
     }
 
     @FXML private void handleBacktrack() {
-        if (selectedImageFile == null) { alert("No Image", "Please select an image first."); return; }
-        ImageBacktrackController.setPendingImage(selectedImageFile);
         go("imagebacktrack.fxml");
     }
 
