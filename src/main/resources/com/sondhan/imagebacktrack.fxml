@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sondhan.controller.ImageBacktrackController"
+            style="-fx-background-color: #FFFFFF; -fx-font-family: 'Segoe UI', Arial, sans-serif;"
+            prefWidth="900.0" prefHeight="640.0">
+
+    <!-- Header -->
+    <top>
+        <HBox style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #E2E8F0 transparent; -fx-border-width: 0 0 1 0;"
+              alignment="CENTER_LEFT" spacing="12.0">
+            <padding><Insets top="14" right="20" bottom="14" left="20"/></padding>
+            <VBox>
+                <Label text="&#x09B8;&#x09A8;&#x09CD;&#x09A7;&#x09BE;&#x09A8;"
+                       style="-fx-text-fill: #117065; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <Label text="Image Backtracker"
+                       style="-fx-text-fill: #64748B; -fx-font-size: 11px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="&#x2190; Back to Home"
+                    style="-fx-background-color: #FFFFFF; -fx-text-fill: #117065; -fx-font-size: 13px; -fx-background-radius: 8; -fx-border-color: #117065; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 8 14; -fx-cursor: hand;"
+                    onAction="#handleBack"/>
+        </HBox>
+    </top>
+
+    <!-- Body -->
+    <center>
+        <ScrollPane fitToWidth="true"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="16.0">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <!-- Page title + loading -->
+                <HBox alignment="CENTER_LEFT" spacing="14.0">
+                    <Label text="&#x1F50D; Image Origin Backtracking"
+                           style="-fx-text-fill: #334155; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ProgressIndicator fx:id="loadingSpinner" prefHeight="28.0" prefWidth="28.0"/>
+                    <Label fx:id="statusLabel" text="Searching..."
+                           style="-fx-text-fill: #64748b; -fx-font-size: 13px;"/>
+                </HBox>
+
+                <!-- Image preview + basic info row -->
+                <HBox spacing="16.0" alignment="TOP_LEFT">
+                    <!-- Thumbnail -->
+                    <VBox style="-fx-background-color: #F8FAFC; -fx-background-radius: 12; -fx-border-color: #E2E8F0; -fx-border-radius: 12; -fx-border-width: 1;"
+                          spacing="8.0" prefWidth="220.0" minWidth="180.0">
+                        <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                        <Label text="UPLOADED IMAGE"
+                               style="-fx-text-fill: #117065; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                        <ImageView fx:id="imagePreview"
+                                   fitWidth="196.0" fitHeight="140.0"
+                                   preserveRatio="true"/>
+                        <Label fx:id="fileNameLabel" text=""
+                               style="-fx-text-fill: #64748B; -fx-font-size: 11px;"
+                               wrapText="true"/>
+                    </VBox>
+
+                    <!-- Earliest origin card -->
+                    <VBox style="-fx-background-color: #E6F4EA; -fx-background-radius: 12; -fx-border-color: #CEEAD6; -fx-border-radius: 12; -fx-border-width: 1;"
+                          spacing="8.0" HBox.hgrow="ALWAYS">
+                        <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                        <Label text="LIKELY ORIGINAL SOURCE"
+                               style="-fx-text-fill: #117065; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                        <Label fx:id="earliestSourceLabel" text="Analysing..."
+                               style="-fx-text-fill: #137333; -fx-font-size: 18px; -fx-font-weight: bold;"
+                               wrapText="true"/>
+                        <Label fx:id="originFoundLabel" text=""
+                               style="-fx-text-fill: #137333; -fx-font-size: 12px;"
+                               wrapText="true"/>
+                    </VBox>
+                </HBox>
+
+                <!-- AI Analysis panel -->
+                <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #E2E8F0; -fx-border-radius: 12; -fx-border-width: 1;"
+                      spacing="10.0">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="AI ORIGIN ANALYSIS"
+                           style="-fx-text-fill: #117065; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextArea fx:id="aiAnalysisArea"
+                              style="-fx-background-color: #F8FAFC; -fx-border-color: #E2E8F0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #334155; -fx-font-size: 13px; -fx-control-inner-background: #F8FAFC;"
+                              prefHeight="160.0" editable="false" wrapText="true"/>
+                </VBox>
+
+                <!-- Matched pages list -->
+                <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #E2E8F0; -fx-border-radius: 12; -fx-border-width: 1;"
+                      spacing="12.0">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <Label text="PAGES WHERE THIS IMAGE APPEARS"
+                               style="-fx-text-fill: #117065; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                        <Label fx:id="matchCountLabel" text=""
+                               style="-fx-background-color: #E1F5FE; -fx-text-fill: #0288D1; -fx-background-radius: 20; -fx-padding: 2 8; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <VBox fx:id="matchesBox" spacing="8.0"/>
+                    <Label fx:id="noMatchLabel" text="&#x26A0; No matching pages found online. This image may be original or not yet indexed."
+                           style="-fx-text-fill: #B06000; -fx-font-size: 13px; -fx-background-color: #FEF7E0; -fx-background-radius: 8; -fx-padding: 10 12;"
+                           wrapText="true" visible="false" managed="false"/>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -85,6 +85,13 @@
                                 <Label fx:id="fileNameLabel" text="No file selected"
                                        style="-fx-text-fill: #64748b; -fx-font-size: 13px;" HBox.hgrow="ALWAYS"/>
                             </HBox>
+
+                            <!-- Backtrack button -->
+                            <Button fx:id="backtrackBtn" text="&#x1F310; Backtrack Image Origin"
+                                    style="-fx-background-color: #117065; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 9 16; -fx-cursor: hand;"
+                                    maxWidth="Infinity" onAction="#handleBacktrack"/>
+                            <Label text="Find where this image first appeared on the web"
+                                   style="-fx-text-fill: #64748b; -fx-font-size: 11px;"/>
                         </VBox>
                     </Tab>
 
