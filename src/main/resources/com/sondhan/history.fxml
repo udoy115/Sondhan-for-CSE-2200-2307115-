@@ -5,17 +5,25 @@
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.sondhan.controller.HistoryController"
-            styleClass="root-pane" prefWidth="1000.0" prefHeight="680.0">
+            style="-fx-background-color: #FFFFFF; -fx-font-family: 'Segoe UI', Arial, sans-serif;"
+            prefWidth="1000.0" prefHeight="680.0">
 
     <!-- Header -->
     <top>
-        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="12.0">
+        <HBox style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #E2E8F0 transparent; -fx-border-width: 0 0 1 0;"
+              alignment="CENTER_LEFT" spacing="12.0">
             <padding><Insets top="14" right="20" bottom="14" left="20"/></padding>
-            <Label text="&#x09B8;&#x09A8;&#x09CD;&#x09A7;&#x09BE;&#x09A8;" styleClass="header-logo"/>
+            <Label text="&#x09B8;&#x09A8;&#x09CD;&#x09A7;&#x09BE;&#x09A8;"
+                   style="-fx-text-fill: #117065; -fx-font-size: 22px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="userNameLabel" styleClass="user-label"/>
-            <Button text="&#x2190; Back" styleClass="btn-secondary" onAction="#handleBack"/>
-            <Button text="&#x1F504; Refresh" styleClass="btn-ghost"  onAction="#handleRefresh"/>
+            <Label fx:id="userNameLabel"
+                   style="-fx-text-fill: #334155; -fx-font-size: 13px;"/>
+            <Button text="&#x2190; Back"
+                    style="-fx-background-color: #FFFFFF; -fx-text-fill: #117065; -fx-font-size: 13px; -fx-background-radius: 8; -fx-border-color: #117065; -fx-border-radius: 8; -fx-border-width: 1; -fx-padding: 8 14; -fx-cursor: hand;"
+                    onAction="#handleBack"/>
+            <Button text="&#x1F504; Refresh"
+                    style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-size: 13px; -fx-padding: 8 12; -fx-cursor: hand; -fx-background-radius: 6;"
+                    onAction="#handleRefresh"/>
         </HBox>
     </top>
 
@@ -26,45 +34,61 @@
             <!-- Table -->
             <VBox HBox.hgrow="ALWAYS" spacing="10.0">
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label text="Search History" styleClass="panel-title" HBox.hgrow="ALWAYS"/>
-                    <Button text="&#x1F5D1; Delete Selected" styleClass="btn-danger"
+                    <Label text="Search History"
+                           style="-fx-text-fill: #334155; -fx-font-size: 17px; -fx-font-weight: bold;"
+                           HBox.hgrow="ALWAYS"/>
+                    <Button text="&#x1F5D1; Delete Selected"
+                            style="-fx-background-color: #FEE2E2; -fx-text-fill: #DC2626; -fx-font-size: 13px; -fx-background-radius: 8; -fx-padding: 8 14; -fx-cursor: hand;"
                             onAction="#handleDeleteSelected"/>
                 </HBox>
 
                 <ProgressIndicator fx:id="loadingSpinner" prefHeight="30.0"/>
                 <Label fx:id="emptyLabel" text="No history yet — run a fact-check to get started."
-                       styleClass="text-muted" visible="false"/>
+                       style="-fx-text-fill: #64748b; -fx-font-size: 13px;" visible="false"/>
 
-                <TableView fx:id="historyTable" VBox.vgrow="ALWAYS" styleClass="history-table">
+                <TableView fx:id="historyTable" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 8; -fx-border-width: 1; -fx-background-radius: 8;">
                     <columns>
-                        <TableColumn fx:id="dateCol"    text="Date"       prefWidth="150"/>
-                        <TableColumn fx:id="typeCol"    text="Type"       prefWidth="70"/>
-                        <TableColumn fx:id="claimCol"   text="Claim"      prefWidth="320"/>
-                        <TableColumn fx:id="verdictCol" text="Verdict"    prefWidth="110"/>
-                        <TableColumn fx:id="confCol"    text="Conf %" prefWidth="70"/>
+                        <TableColumn fx:id="dateCol"    text="Date"    prefWidth="150"/>
+                        <TableColumn fx:id="typeCol"    text="Type"    prefWidth="70"/>
+                        <TableColumn fx:id="claimCol"   text="Claim"   prefWidth="320"/>
+                        <TableColumn fx:id="verdictCol" text="Verdict" prefWidth="110"/>
+                        <TableColumn fx:id="confCol"    text="Conf %"  prefWidth="70"/>
                     </columns>
-                    <placeholder><Label text="No results" styleClass="text-muted"/></placeholder>
+                    <placeholder>
+                        <Label text="No results" style="-fx-text-fill: #64748b; -fx-font-size: 13px;"/>
+                    </placeholder>
                 </TableView>
             </VBox>
 
             <!-- Detail panel -->
-            <VBox fx:id="detailPanel" styleClass="panel" spacing="12.0" prefWidth="320.0" minWidth="280.0">
+            <VBox fx:id="detailPanel"
+                  style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #E2E8F0; -fx-border-radius: 12; -fx-border-width: 1;"
+                  spacing="12.0" prefWidth="320.0" minWidth="280.0">
                 <padding><Insets top="20" right="16" bottom="20" left="16"/></padding>
-                <Label text="Details" styleClass="panel-title"/>
+                <Label text="Details"
+                       style="-fx-text-fill: #334155; -fx-font-size: 17px; -fx-font-weight: bold;"/>
 
-                <Label text="Claim" styleClass="section-label"/>
-                <Label fx:id="detailClaimLabel" wrapText="true" styleClass="claim-text"/>
+                <Label text="CLAIM"
+                       style="-fx-text-fill: #117065; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="detailClaimLabel" wrapText="true"
+                       style="-fx-text-fill: #334155; -fx-font-size: 14px;"/>
 
-                <Label text="Verdict" styleClass="section-label"/>
-                <Label fx:id="detailVerdictLabel" styleClass="panel-title"/>
+                <Label text="VERDICT"
+                       style="-fx-text-fill: #117065; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="detailVerdictLabel"
+                       style="-fx-text-fill: #334155; -fx-font-size: 17px; -fx-font-weight: bold;"/>
 
-                <Label text="Explanation" styleClass="section-label"/>
+                <Label text="EXPLANATION"
+                       style="-fx-text-fill: #117065; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                 <TextArea fx:id="detailExplanationArea" prefHeight="140.0"
-                          editable="false" wrapText="true" styleClass="explanation-area"/>
+                          style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #334155; -fx-font-size: 13px; -fx-control-inner-background: #FFFFFF;"
+                          editable="false" wrapText="true"/>
 
-                <Label text="Sources (JSON)" styleClass="section-label"/>
-                <Label fx:id="detailSourcesLabel" wrapText="true" styleClass="text-muted"
-                       style="-fx-font-size:11px;"/>
+                <Label text="SOURCES (JSON)"
+                       style="-fx-text-fill: #117065; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="detailSourcesLabel" wrapText="true"
+                       style="-fx-text-fill: #64748B; -fx-font-size: 11px;"/>
             </VBox>
         </HBox>
     </center>

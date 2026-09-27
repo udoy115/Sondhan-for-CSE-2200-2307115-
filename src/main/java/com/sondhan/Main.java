@@ -38,8 +38,6 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(url);
         Parent root = loader.load();
         Scene scene = new Scene(root, w, h);
-        java.net.URL cssUrl = Main.class.getResource("/com/sondhan/styles.css");
-        if (cssUrl != null) scene.getStylesheets().add(cssUrl.toExternalForm());
         primaryStage.setScene(scene);
     }
 
